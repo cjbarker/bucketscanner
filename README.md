@@ -9,19 +9,6 @@
 TBA
 
 ## Developer
-Bucket Scanner supports multiple platform builds via GNU Make. 
-
-To build clone the repo, setup Go and run make.
-
-The default make target builds the library and command line binary in the same directory: bucketscanner and libbucketscanner.
-
-```
-git clone git@github.com:cjbarker/bucketscanner.git
-cd bucketscanner
-export GOPATH=${GOPATH}:`pwd`
-make
-```
-
 Bucketscanner supports multiple platform builds via GNU Make. It does assume and rely on
 [Glide](https://github.com/Masterminds/glide) for GoLang package management including dependencies.  Please ensure glide is installed and available in your path before continuing.
 
