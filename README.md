@@ -2,8 +2,6 @@
 
 [![pipeline status](https://gitlab.com/cjbarker/bucketscanner/badges/master/pipeline.svg)](https://gitlab.com/cjbarker/bucketscanner/commits/master)  [![coverage report](https://gitlab.com/cjbarker/bucketscanner/badges/master/coverage.svg)](http://cjbarker.pages.gitlab.com/bucketscanner/test-coverage.html)
 
-----
-
 ## Overview
 *Searching Cloud Storage Since 2017*
 
@@ -48,7 +46,7 @@ bucketscanner libbucketscanner
 ```
 
 ## Continous Integration
-[GitLab's CI Pipelines](https://docs.gitlab.com/ee/ci/pipelines.html) handle the continuos integration (CI) and eventually will also handle the continuous deployment (CD) to AWS (TBA when implemented).
+[GitLab's CI Pipelines](https://docs.gitlab.com/ee/ci/pipelines.html) handle the continuos integration (CI) and eventually will also handle the continuous deployment (CD) to cloud provider (TBA).
 
 All management of CI/CD is handled via the [.gitlab-ci.yml](https://gitlab.com/cjbarker/bucketscanner/blob/master/.gitlab-ci.yml) file. For more details on  GitLab CI and job configuration consult:  https://docs.gitlab.com/ce/ci/yaml/README.html
 
