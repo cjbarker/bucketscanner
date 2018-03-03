@@ -2,7 +2,7 @@ package bucketscanner_test
 
 import (
 	"encoding/json"
-	"github.com/cjbarker/bucketscanner"
+	"gitlab.com/cjbarker/bucketscanner"
 	"testing"
 )
 

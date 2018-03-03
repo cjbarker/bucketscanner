@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cjbarker/bucketscanner"
+	"gitlab.com/cjbarker/bucketscanner"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"os"
 	"strings"

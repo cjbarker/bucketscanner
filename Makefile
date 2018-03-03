@@ -16,7 +16,7 @@ COVERAGE_DIR=coverage
 COV_PROFILE=${COVERAGE_DIR}/test-coverage.txt
 COV_HTML=${COVERAGE_DIR}/test-coverage.html
 LIB=lib${BINARY}
-PKG=github.com/cjbarker/${BINARY}
+PKG=gitlab.com/cjbarker/${BINARY}
 PLATFORMS=darwin linux windows
 ARCHITECTURES=386 amd64
 VERSION=0.0.8
@@ -45,9 +45,6 @@ glide:
 	# Run glide up if want to update via glide.yaml
 	glide install
 
-get:
-	go get gopkg.in/alecthomas/kingpin.v2
-
 vet:
 	go vet ${PKG}
 
@@ -64,7 +61,7 @@ lint:
 format:
 	go fmt ${PKG}
 
-build: get format vet
+build: glide format vet
 	go build -o ${BIN_DIR}/${LIB} ${LDFLAGS} ${PKG}
 	go build -o ${BIN_DIR}/${BINARY} ${LDFLAGS} ${PKG}/cli
 
