@@ -1,0 +1,4 @@
+package: gitlab.com/cjbarker/bucketscanner
+import:
+- package: gopkg.in/alecthomas/kingpin.v2
+  version: ^2.2.6
