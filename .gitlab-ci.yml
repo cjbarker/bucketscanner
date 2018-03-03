@@ -1,0 +1,63 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  APP_REPO: "gitlab.com/cjbarker/bucketscanner"
+  GOPATH: "/go"
+
+cache:
+  paths:
+     - ${GOPATH}/src/${APP_REPO}/vendor/
+
+before_script:
+  # Setup GoLang environment for build
+  - mkdir -p ${GOPATH}/src/${APP_REPO}
+  - mkdir -p ${GOPATH}/src/${APP_REPO}/coverage
+  - mkdir -p ${GOPATH}/src/${APP_REPO}/bin
+  - cp -rf ${CI_PROJECT_DIR}/* ${GOPATH}/src/${APP_REPO}
+  # Build from GoPath not CI project dir
+  - cd ${GOPATH}/src/${APP_REPO}
+
+after_script:
+  # Ensure artifacts available 
+  - cp -R ${GOPATH}/src/${APP_REPO}/bin ${CI_PROJECT_DIR}/.
+  - cp -R ${GOPATH}/src/${APP_REPO}/coverage ${CI_PROJECT_DIR}/.
+
+build:
+  image: registry.${APP_REPO}:latest
+  stage: build
+  script:
+    - make build
+  artifacts:
+    paths:
+      - bin/
+    expire_in: 2 weeks
+
+test:
+  image: registry.${APP_REPO}:latest
+  stage: test
+  script:
+    - make test 
+  artifacts:
+    paths:
+      - coverage/
+    expire_in: 2 weeks
+
+pages:
+  image: alpine:latest
+  stage: deploy
+  script:
+    # update pages with latest javadocs
+    - cd ${CI_PROJECT_DIR}
+    - mkdir .public
+    - cp -r ${GOPATH}/src/${APP_REPO}/coverage/* .public
+    - mv .public public
+  artifacts:
+    paths:
+    - public
+    expire_in: 30 days
+  only:
+    - master
+
