@@ -1,6 +1,8 @@
 # Bucket Scanner
 
-[![pipeline status](https://gitlab.com/cjbarker/bucketscanner/badges/master/pipeline.svg)](https://gitlab.com/cjbarker/bucketscanner/commits/master)  [![coverage report](https://gitlab.com/cjbarker/bucketscanner/badges/master/coverage.svg)] (https://cjbarker.gitlab.io/bucketscanner/test-coverage.html)
+[![pipeline status](https://gitlab.com/cjbarker/bucketscanner/badges/master/pipeline.svg)](https://gitlab.com/cjbarker/bucketscanner/commits/master) 
+[![coverage report](https://gitlab.com/cjbarker/bucketscanner/badges/master/coverage.svg)] (https://cjbarker.gitlab.io/bucketscanner/test-coverage.html)
+[![GitLab license](https://img.shields.io/badge/license-Apache2.0-brightgreen.svg)](https://gitlab.com/cjbarker/bucketscanner/blob/master/LICENSE)
 
 ## Overview
 *Searching Cloud Storage Since 2017*
