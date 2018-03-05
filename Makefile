@@ -10,6 +10,7 @@ K := $(foreach exec,$(EXECUTABLES),\
 
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
+VERSION=$(shell cat version.txt)
 BIN_DIR=bin
 BINARY=bucketscanner
 COVERAGE_DIR=coverage
@@ -19,7 +20,6 @@ LIB=lib${BINARY}
 PKG=gitlab.com/cjbarker/${BINARY}
 PLATFORMS=darwin linux windows
 ARCHITECTURES=386 amd64
-VERSION=0.0.8
 BUILD=`date +%FT%T%z`
 UNAME=$(shell uname)
 GOLIST=$(shell go list ./...)

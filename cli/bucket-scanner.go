@@ -70,6 +70,8 @@ func main() {
 	configPtr = new(Config)
 
 	app := kingpin.New(os.Args[0], "Cloud command-line bucket (object) scanner.")
+	app.Version("Version: " + bucketscanner.Version + "\nBuild: " + bucketscanner.Build)
+
 	configPtr.BucketNames = app.Arg("bucket-name", "Bucket(s) name(s) to scan. Does support comma separated for multiple buckets.").Required().String()
 	configPtr.CloudProvider = app.Flag("cloud", "Cloud provider to scan: aws, gcp, azure. Defaults to all.").Required().String()
 	configPtr.ThrottleMs = app.Flag("throttle", "Time in milliseconds to throttle subsequent requests sent to a given provider.").Int()
