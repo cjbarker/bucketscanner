@@ -30,7 +30,7 @@ LDFLAGS=-ldflags "-X ${PKG}.Version=${VERSION} -X ${PKG}.Build=${BUILD}"
 LDFLAGS_TEST=-ldflags "-X ${PKG}.Version=${VERSION} -X ${PKG}.Build=${BUILD}"
 
 
-.PHONY: list check clean install build_all all
+.PHONY: list check clean install build_all all cyclo
 
 default: build
 
@@ -69,7 +69,7 @@ build_all: get format vet
 	$(foreach GOOS, $(PLATFORMS),\
 	$(foreach GOARCH, $(ARCHITECTURES), $(shell export GOOS=$(GOOS); export GOARCH=$(GOARCH); go build -v -o $(BIN_DIR)/$(BINARY)-$(GOOS)-$(GOARCH) $(LDFLAGS) $(PKG)/cli; go build -v -o $(BIN_DIR)/$(LIB)-$(GOOS)-$(GOARCH) $(LDFLAGS) $(PKG))))
 
-test: build
+test: build cyclo
 	# tests and code coverage
 	mkdir -p $(COVERAGE_DIR)
 	go test ${GOLIST} -short -v ${LDFLAGS_TEST} -coverprofile ${COV_PROFILE}
@@ -77,6 +77,15 @@ test: build
 ifeq ($(UNAME), Darwin)
 	open ${COV_HTML}
 endif
+
+cyclo:
+	@go get github.com/fzipp/gocyclo
+	@cyclo_results=$(shell gocyclo -over 20 . | grep -v "vendor")
+ifeq ($(cyclo_results),)
+	@# ignore no results
+else
+	printf ${cyclo_results}
+endif 
 
 docs: 
 	go get golang.org/x/tools/cmd/godoc
