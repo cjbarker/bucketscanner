@@ -53,6 +53,18 @@ type file struct {
 	Files []file `json:"files"`
 }
 
+func (b Bucket) Download(destDir string) (success bool, err error) {
+	// TODO
+	// Check if destDir is valid path
+	// Check if Bucket state is valid and can read files
+	if strings.Trim(destDir, " ") == "" {
+		return false, errors.New("Destination directory is not accepted as a blank string")
+	}
+
+	// TODO iterate and download files
+	return false, nil
+}
+
 func getHTTPBucket(uri string) (contents *string, err error) {
 	if strings.Trim(uri, " ") == "" {
 		return nil, errors.New("Blank strings not accepted for bucket URI")
