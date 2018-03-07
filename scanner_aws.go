@@ -37,7 +37,7 @@ type Contents struct {
 	StorageClass string
 }
 
-func (a AwsScanner) Get(name string) (bucket *Bucket, err error) {
+func (a AwsScanner) Read(name string) (bucket *Bucket, err error) {
 	if strings.Trim(name, " ") == "" {
 		return nil, errors.New("Blank strings not accepted for bucket name")
 	}
@@ -115,6 +115,18 @@ func (a AwsScanner) Get(name string) (bucket *Bucket, err error) {
 	}
 
 	return bucket, nil
+}
+
+func (a AwsScanner) Write(name string) (isWritable bool, err error) {
+	if strings.Trim(name, " ") == "" {
+		return false, errors.New("Blank strings not accepted for bucket name")
+	}
+
+	//url := strings.Replace(azureURI, bucketName, name, 1)
+
+	// TODO implement
+
+	return false, errors.New("AWSWriter is currently not supported")
 }
 
 func (a AwsScanner) GetProviderName() (cloudProviderName string) {

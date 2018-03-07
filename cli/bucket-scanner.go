@@ -124,7 +124,7 @@ func main() {
 
 				configPtr.v(fmt.Sprintf("Getting from %s bucket: %s", scanner.GetProviderName(), bucketName))
 
-				bucket, err := scanner.Get(bucketName)
+				bucket, err := scanner.Read(bucketName)
 
 				if err != nil {
 					fmt.Println(err)

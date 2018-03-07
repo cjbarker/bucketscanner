@@ -29,7 +29,8 @@ const (
 )
 
 type Scanner interface {
-	Get(name string) (bucket *Bucket, err error)
+	Read(name string) (bucket *Bucket, err error)
+	Write(name string) (isWritable bool, err error)
 	GetProviderName() (cloudProviderName string)
 }
 

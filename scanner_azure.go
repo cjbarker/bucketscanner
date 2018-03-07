@@ -19,7 +19,7 @@ func (a AzureScanner) GetProviderName() (cloudProviderName string) {
 	return azureName
 }
 
-func (a AzureScanner) Get(name string) (bucket *Bucket, err error) {
+func (a AzureScanner) Read(name string) (bucket *Bucket, err error) {
 	if strings.Trim(name, " ") == "" {
 		return nil, errors.New("Blank strings not accepted for bucket name")
 	}
@@ -36,4 +36,16 @@ func (a AzureScanner) Get(name string) (bucket *Bucket, err error) {
 	*/
 
 	return nil, errors.New("Azure Scanner is currently not supported")
+}
+
+func (a AzureScanner) Write(name string) (isWritable bool, err error) {
+	if strings.Trim(name, " ") == "" {
+		return false, errors.New("Blank strings not accepted for bucket name")
+	}
+
+	//url := strings.Replace(azureURI, bucketName, name, 1)
+
+	// TODO implement
+
+	return false, errors.New("Azure Writer is currently not supported")
 }

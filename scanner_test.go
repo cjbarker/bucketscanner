@@ -27,18 +27,30 @@ func TestGetProviderName(t *testing.T) {
 	if aws.GetProviderName() != expected {
 		t.Errorf("Invalid AWS provider name. got: %s, expected %s", aws.GetProviderName(), expected)
 	}
+
+	expected = "Azure Blob Storage"
+	azure := &bucketscanner.AzureScanner{}
+	if azure.GetProviderName() != expected {
+		t.Errorf("Invalid Azure provider name. got: %s, expected %s", azure.GetProviderName(), expected)
+	}
+
+	expected = "Google Cloud Storage"
+	gcp := &bucketscanner.GcpScanner{}
+	if gcp.GetProviderName() != expected {
+		t.Errorf("Invalid GCP provider name. got: %s, expected %s", gcp.GetProviderName(), expected)
+	}
 }
 
-func TestGetAws(t *testing.T) {
+func TestReadAws(t *testing.T) {
 	// Empty bucket name
 	aws := &bucketscanner.AwsScanner{}
-	_, err := aws.Get("   ")
+	_, err := aws.Read("   ")
 	if err == nil {
 		t.Errorf("Error should occur when empty bucket name string is attempted to be retrieved.")
 	}
 
 	// Invalid bucket
-	bucket, err := aws.Get(InvalidBucket)
+	bucket, err := aws.Read(InvalidBucket)
 	if err != nil {
 		t.Errorf("Was expecting bucket %s to provide Invalid state, but got error: %s", InvalidBucket, err.Error())
 	}
@@ -47,7 +59,7 @@ func TestGetAws(t *testing.T) {
 	}
 
 	// Private bucket
-	bucket, err = aws.Get(PrivateBucket)
+	bucket, err = aws.Read(PrivateBucket)
 	if err != nil {
 		t.Errorf("Was expecting bucket %s to provide Private state, but got error: %s", PrivateBucket, err.Error())
 	}
@@ -56,7 +68,7 @@ func TestGetAws(t *testing.T) {
 	}
 
 	// Public bucket
-	bucket, err = aws.Get(PublicBucket)
+	bucket, err = aws.Read(PublicBucket)
 	if err != nil {
 		t.Errorf("Was expecting bucket %s to provide Public state, but got error: %s", PublicBucket, err.Error())
 	}
@@ -71,5 +83,29 @@ func TestGetAws(t *testing.T) {
 	}
 	if len(string(jsonStr)) < 10 {
 		t.Errorf("Bucket JSON string is too short in length: %s", string(jsonStr))
+	}
+}
+
+func TestWriteAws(t *testing.T) {
+	aws := &bucketscanner.AwsScanner{}
+	_, err := aws.Write("   ")
+	if err == nil {
+		t.Errorf("Error should occur when empty bucket name string is attempted to be retrieved.")
+	}
+}
+
+func TestWriteAzure(t *testing.T) {
+	azure := &bucketscanner.AzureScanner{}
+	_, err := azure.Write("   ")
+	if err == nil {
+		t.Errorf("Error should occur when empty bucket name string is attempted to be retrieved.")
+	}
+}
+
+func TestWriteGcp(t *testing.T) {
+	aws := &bucketscanner.GcpScanner{}
+	_, err := aws.Write("   ")
+	if err == nil {
+		t.Errorf("Error should occur when empty bucket name string is attempted to be retrieved.")
 	}
 }
