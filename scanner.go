@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 )
@@ -54,15 +55,26 @@ type file struct {
 }
 
 func (b Bucket) Download(destDir string) (success bool, err error) {
-	// TODO
 	// Check if destDir is valid path
 	// Check if Bucket state is valid and can read files
 	if strings.Trim(destDir, " ") == "" {
 		return false, errors.New("Destination directory is not accepted as a blank string")
 	}
 
+	fi, err := os.Lstat(destDir)
+
+	if os.IsNotExist(err) {
+		return false, errors.New("Destination file does NOT exist at " + destDir)
+	}
+
+	mode := fi.Mode()
+
+	if !mode.IsDir() {
+		return false, errors.New("Destination file is NOT a directory " + destDir)
+	}
+
 	// TODO iterate and download files
-	return false, nil
+	return false, errors.New("need to implement")
 }
 
 func getHTTPBucket(uri string) (contents *string, err error) {
@@ -80,11 +92,12 @@ func getHTTPBucket(uri string) (contents *string, err error) {
 	}
 
 	// only grab valid response
-	defer resp.Body.Close()
 	contentBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
+
+	defer resp.Body.Close()
 
 	contentStr := string(contentBytes)
 	return &contentStr, nil
