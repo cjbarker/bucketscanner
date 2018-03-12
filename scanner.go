@@ -1,6 +1,7 @@
 package bucketscanner
 
 import (
+	"archive/zip"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -56,30 +57,81 @@ type file struct {
 	IsDir bool   `json:"directory"`
 	Size  int64  `json:"size"`
 	Files []file `json:"files"`
+	Body  []byte
+}
+
+// writeToArchive provides recursive HTTP bucket file download and writes to a given archive writer
+func (b Bucket) writeToArchive(bucketFile *file, zipWriter *zip.Writer) (err error) {
+	if &b == nil {
+		return errors.New("Nil bucket unable to write to archive")
+	}
+	if bucketFile == nil || zipWriter == nil {
+		return errors.New("Nil file and/or archive writer passed - unable to write to archive")
+	}
+
+	zipFile, err := zipWriter.Create(bucketFile.Name)
+	if err != nil {
+		return errors.New("Failed to create file in archive " + err.Error())
+	}
+
+	if len(bucketFile.Body) <= 0 {
+		strBody, err := getHTTPBucket(b.URI + "/" + bucketFile.Name)
+		if err != nil {
+			return err
+		}
+		bucketFile.Body = []byte(*strBody)
+	}
+
+	_, err = zipFile.Write(bucketFile.Body)
+	if err != nil {
+		return errors.New("Failed to write file to archive " + err.Error())
+	}
+
+	return
 }
 
 // Download the contents of the bucket to a given destination directory
-func (b Bucket) Download(destDir string) (success bool, err error) {
-	// Check if destDir is valid path
-	// Check if Bucket state is valid and can read files
+func (b Bucket) Download(destDir string) (archivePath *string, err error) {
+
 	if strings.Trim(destDir, " ") == "" {
-		return false, errors.New("Destination directory is not accepted as a blank string")
+		return nil, errors.New("Destination directory is not accepted as a blank string")
 	}
 
 	fi, err := os.Lstat(destDir)
-
 	if os.IsNotExist(err) {
-		return false, errors.New("Destination file does NOT exist at " + destDir)
+		return nil, errors.New("Destination file does NOT exist at " + destDir)
 	}
 
 	mode := fi.Mode()
-
 	if !mode.IsDir() {
-		return false, errors.New("Destination file is NOT a directory " + destDir)
+		return nil, errors.New("Destination file is NOT a directory " + destDir)
 	}
 
-	// TODO iterate and download files
-	return false, errors.New("need to implement")
+	if len(b.Files) <= 0 {
+		return nil, errors.New("Bucket " + b.Name + " has no files to download")
+	}
+
+	// Create buffer to write to archive
+	output := "bucket-" + b.Name + ".zip"
+	newfile, err := os.Create(output)
+	if err != nil {
+		return nil, err
+	}
+	defer newfile.Close()
+
+	// create zip archive
+	zipWriter := zip.NewWriter(newfile)
+	defer zipWriter.Close()
+
+	// Iterate and download bucket files to the archive
+	for _, file := range b.Files {
+		err = b.writeToArchive(&file, zipWriter)
+		if err != nil {
+			return nil, errors.New("Failed to write file [" + file.Name + "] to archive: " + err.Error())
+		}
+	}
+
+	return &output, nil
 }
 
 // getHTTPBucket establiesh HTTP connection to the uri and returns contents from HTTP response body
