@@ -18,6 +18,7 @@ var (
 
 const bucketName string = "[replace-bucket-name]"
 
+// BucketState denotes an integer defining its given state
 type BucketState int
 
 // Bucket states
@@ -29,12 +30,14 @@ const (
 	RateLimited             // Unable to determine due to rate limiting e.g. 503 Slow Down
 )
 
+// Scanner interface declares functions for cloud provider scanner to implement
 type Scanner interface {
 	Read(name string) (bucket *Bucket, err error)
 	Write(name string) (isWritable bool, err error)
 	GetProviderName() (cloudProviderName string)
 }
 
+// Bucket structure is the results of a given bucket including its meta-data
 type Bucket struct {
 	Provider  string      `json:"provider"`
 	Name      string      `json:"name"`
@@ -47,6 +50,7 @@ type Bucket struct {
 	Files     []file `json:"files"`
 }
 
+// file is a representation of a bucket (object) file
 type file struct {
 	Name  string `json:"name"`
 	IsDir bool   `json:"directory"`
@@ -54,6 +58,7 @@ type file struct {
 	Files []file `json:"files"`
 }
 
+// Download the contents of the bucket to a given destination directory
 func (b Bucket) Download(destDir string) (success bool, err error) {
 	// Check if destDir is valid path
 	// Check if Bucket state is valid and can read files
@@ -77,6 +82,7 @@ func (b Bucket) Download(destDir string) (success bool, err error) {
 	return false, errors.New("need to implement")
 }
 
+// getHTTPBucket establiesh HTTP connection to the uri and returns contents from HTTP response body
 func getHTTPBucket(uri string) (contents *string, err error) {
 	if strings.Trim(uri, " ") == "" {
 		return nil, errors.New("Blank strings not accepted for bucket URI")

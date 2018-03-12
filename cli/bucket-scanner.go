@@ -25,13 +25,14 @@ const (
 	AzureProvider = "azure"
 )
 
+// Config is struct representing the Commandline argument settings
 type Config struct {
 	BucketNames   *string
 	Download      *bool
 	Verbose       *bool
 	CloudProvider *string
 	ThrottleMs    *int
-	Json          *bool
+	JSON          *bool
 }
 
 func (c Config) v(msg string) {
@@ -76,7 +77,7 @@ func main() {
 	configPtr.CloudProvider = app.Flag("cloud", "Cloud provider to scan: aws, gcp, azure. Defaults to all.").Required().String()
 	configPtr.ThrottleMs = app.Flag("throttle", "Time in milliseconds to throttle subsequent requests sent to a given provider.").Int()
 	configPtr.Download = app.Flag("download", "Download bucket content(s).").Bool()
-	configPtr.Json = app.Flag("json", "Output results in JSON.").Bool()
+	configPtr.JSON = app.Flag("JSON", "Output results in JSON.").Bool()
 	configPtr.Verbose = app.Flag("verbose", "Verbose output messages. Defaults to quiet.").Bool()
 
 	kingpin.MustParse(app.Parse(os.Args[1:]))
@@ -91,7 +92,7 @@ func main() {
 	configPtr.v(fmt.Sprintf("Buckets: % s", *configPtr.BucketNames))
 	configPtr.v(fmt.Sprintf("ThrottleMS: %d", *configPtr.ThrottleMs))
 	configPtr.v(fmt.Sprintf("Download: %t", *configPtr.Download))
-	configPtr.v(fmt.Sprintf("JSON: %t", *configPtr.Json))
+	configPtr.v(fmt.Sprintf("JSON: %t", *configPtr.JSON))
 	configPtr.v(fmt.Sprintf("Verbose: %t", *configPtr.Verbose))
 
 	// space or command delim
@@ -143,13 +144,13 @@ func main() {
 
 	// Output Results
 	for _, bucket := range buckets {
-		if *configPtr.Json {
-			jsonStr, err := json.Marshal(bucket)
+		if *configPtr.JSON {
+			JSONStr, err := json.Marshal(bucket)
 			if err != nil {
 				fmt.Println(err)
 				// TODO panic or not?
 			}
-			fmt.Printf("%s\n", string(jsonStr))
+			fmt.Printf("%s\n", string(JSONStr))
 		} else {
 			fmt.Printf("%v\n", bucket)
 		}

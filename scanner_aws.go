@@ -14,10 +14,12 @@ const (
 	awsURI  = "https://" + bucketName + ".s3.amazonaws.com"
 )
 
+// AwsScanner is struct for cloud scanner of Amazon Web Services
 type AwsScanner struct {
 	result ListBucketResult
 }
 
+// ListBucketResult is the analyzed results read from a given AWS bucket
 type ListBucketResult struct {
 	XMLName      xml.Name `xml:"ListBucketResult"`
 	Name         string
@@ -28,6 +30,7 @@ type ListBucketResult struct {
 	ContentsList []Contents `xml:"Contents"`
 }
 
+// Contents are the XML contents of the bucket (one per file)
 type Contents struct {
 	XMLName      xml.Name `xml:"Contents"`
 	Key          string
@@ -37,6 +40,7 @@ type Contents struct {
 	StorageClass string
 }
 
+// Read establishes HTTP connection and reads the contents from the bucket
 func (a AwsScanner) Read(name string) (bucket *Bucket, err error) {
 	if strings.Trim(name, " ") == "" {
 		return nil, errors.New("Blank strings not accepted for bucket name")
@@ -117,6 +121,7 @@ func (a AwsScanner) Read(name string) (bucket *Bucket, err error) {
 	return bucket, nil
 }
 
+// Write attempts to write a temporary file to a given bucket within AWS
 func (a AwsScanner) Write(name string) (isWritable bool, err error) {
 	if strings.Trim(name, " ") == "" {
 		return false, errors.New("Blank strings not accepted for bucket name")
@@ -129,6 +134,7 @@ func (a AwsScanner) Write(name string) (isWritable bool, err error) {
 	return false, errors.New("AWSWriter is currently not supported")
 }
 
+// GetProviderName returns the given Cloud Provider's name for the scanner
 func (a AwsScanner) GetProviderName() (cloudProviderName string) {
 	return awsName
 }

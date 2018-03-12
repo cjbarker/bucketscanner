@@ -12,9 +12,11 @@ const (
 	azureURI  = "https://storagesample.blob.core.windows.net/" + bucketName
 )
 
+// AzureScanner is struct for cloud scanner of Azure
 type AzureScanner struct {
 }
 
+// GetProviderName returns the given Cloud Provider's name for the scanner
 func (a AzureScanner) GetProviderName() (cloudProviderName string) {
 	return azureName
 }

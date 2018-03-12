@@ -12,9 +12,11 @@ const (
 	gcpURI  = "https://" + bucketName + ".storage.googleapis.com"
 )
 
+// GcpScanner is struct for cloud scanner of Google Cloud Platform
 type GcpScanner struct {
 }
 
+// GetProviderName returns the given Cloud Provider's name for the scanner
 func (g GcpScanner) GetProviderName() (cloudProviderName string) {
 	return gcpName
 }
