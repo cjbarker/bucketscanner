@@ -107,6 +107,20 @@ func (a AwsScanner) Read(name string) (bucket *Bucket, err error) {
 		for _, element := range a.result.ContentsList {
 			bucket.NoFiles++
 			bucket.TotalSize += int64(element.Size)
+
+			var isDir = false
+			if strings.HasSuffix(element.Key, "/") {
+				isDir = true
+			}
+
+			bucketFile := file{
+				Name:  element.Key,
+				Size:  int64(element.Size),
+				IsDir: isDir,
+			}
+
+			bucket.Files = append(bucket.Files, bucketFile)
+
 			/*
 				fmt.Printf("\nResult: %s\n", element.Key)
 				fmt.Printf("Result: %s\n", element.LastModified)
