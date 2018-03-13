@@ -29,6 +29,7 @@ const (
 type Config struct {
 	BucketNames   *string
 	Download      *bool
+	Output        *string
 	Verbose       *bool
 	CloudProvider *string
 	ThrottleMs    *int
@@ -77,6 +78,7 @@ func main() {
 	configPtr.CloudProvider = app.Flag("cloud", "Cloud provider to scan: aws, gcp, azure. Defaults to all.").Required().String()
 	configPtr.ThrottleMs = app.Flag("throttle", "Time in milliseconds to throttle subsequent requests sent to a given provider.").Int()
 	configPtr.Download = app.Flag("download", "Download bucket content(s).").Bool()
+	configPtr.Output = app.Flag("output", "Download bucket content(s) destination directory. Defaults to current user's directory if none passed.").String()
 	configPtr.JSON = app.Flag("JSON", "Output results in JSON.").Bool()
 	configPtr.Verbose = app.Flag("verbose", "Verbose output messages. Defaults to quiet.").Bool()
 
@@ -92,6 +94,7 @@ func main() {
 	configPtr.v(fmt.Sprintf("Buckets: % s", *configPtr.BucketNames))
 	configPtr.v(fmt.Sprintf("ThrottleMS: %d", *configPtr.ThrottleMs))
 	configPtr.v(fmt.Sprintf("Download: %t", *configPtr.Download))
+	configPtr.v(fmt.Sprintf("Output: %t", *configPtr.Output))
 	configPtr.v(fmt.Sprintf("JSON: %t", *configPtr.JSON))
 	configPtr.v(fmt.Sprintf("Verbose: %t", *configPtr.Verbose))
 
@@ -136,20 +139,14 @@ func main() {
 					mutex.Unlock()
 				}
 
-				if *configPtr.Download {
-					dst, err := os.Getwd()
-					if err != nil {
-						configPtr.v(fmt.Sprintf("Unable to get working directory due to error: %s", err.Error()))
-						//configPtr.v(fmt.Fprintln(os.Stderr, "Unable to get workind directory due to error: %s", err.Error()))
-					}
-
-					configPtr.v(fmt.Sprintf("Download bucket contents from %s to dir: %s", bucketName, dst))
-
-					_, err = bucket.Download(dst)
+				if *configPtr.Download || (configPtr.Output != nil && len(*configPtr.Output) > 0) {
+					configPtr.v(fmt.Sprintf("Download bucket contents from %s ", bucketName))
+					zipFile, err := bucket.Download(*configPtr.Output)
 					if err != nil {
 						configPtr.v(fmt.Sprintf("Unable to download bucket due to error: %s", err.Error()))
 						//configPtr.v(fmt.Fprintln(os.Stderr, "Unable to download bucket due to error: %s", err.Error()))
 					}
+					fmt.Printf("Bucket downloaded successfully to %s\n", *zipFile)
 				}
 			}
 		}(scanner)

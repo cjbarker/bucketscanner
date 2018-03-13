@@ -104,6 +104,10 @@ func (b Bucket) Download(destDir string) (archivePath *string, err error) {
 		destDir = usr.HomeDir + string(os.PathSeparator)
 	}
 
+	if !strings.HasSuffix(destDir, string(os.PathSeparator)) {
+		destDir = destDir + string(os.PathSeparator)
+	}
+
 	fi, err := os.Lstat(destDir)
 	if os.IsNotExist(err) {
 		return nil, errors.New("Destination file does NOT exist at " + destDir)
