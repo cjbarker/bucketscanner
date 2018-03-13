@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"os/user"
 	"strings"
 	"time"
 )
@@ -93,8 +94,14 @@ func (b Bucket) writeToArchive(bucketFile *file, zipWriter *zip.Writer) (err err
 // Download the contents of the bucket to a given destination directory
 func (b Bucket) Download(destDir string) (archivePath *string, err error) {
 
+	// set destination archive path to user's home dir
 	if strings.Trim(destDir, " ") == "" {
-		return nil, errors.New("Destination directory is not accepted as a blank string")
+		//return nil, errors.New("Destination directory is not accepted as a blank string")
+		usr, err := user.Current()
+		if err != nil {
+			return nil, err
+		}
+		destDir = usr.HomeDir + string(os.PathSeparator)
 	}
 
 	fi, err := os.Lstat(destDir)
@@ -112,7 +119,8 @@ func (b Bucket) Download(destDir string) (archivePath *string, err error) {
 	}
 
 	// Create buffer to write to archive
-	output := "bucket-" + b.Name + ".zip"
+	t := time.Now()
+	output := destDir + "bucket-" + b.Name + "-" + t.Format(time.RFC3339) + ".zip"
 	newfile, err := os.Create(output)
 	if err != nil {
 		return nil, err

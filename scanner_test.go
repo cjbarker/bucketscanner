@@ -23,10 +23,13 @@ func TestDownload(t *testing.T) {
 		t.Errorf("Was expecting bucket %s to provide Public state, but got error: %s", PublicBucket, err.Error())
 	}
 
-	_, err = bucket.Download("    ")
-	if err == nil {
-		t.Errorf("Should not be able to download bucket to empty directory filename")
-	}
+	/*
+		// Will download to user's home directory if empty
+			_, err = bucket.Download("    ")
+			if err == nil {
+				t.Errorf("Should not be able to download bucket to empty directory filename")
+			}
+	*/
 
 	// create test regular file
 	tmpFilename := ".test_temp_file"
@@ -46,8 +49,10 @@ func TestDownload(t *testing.T) {
 
 	// create test directory
 	tmpFilename = os.TempDir()
-	_, err = bucket.Download(tmpFilename)
+	zipFile, err := bucket.Download(tmpFilename)
 	if err != nil {
 		t.Errorf("Unable to download bucket to dir due to error %s", err.Error())
 	}
+
+	os.Remove(*zipFile)
 }
