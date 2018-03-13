@@ -25,9 +25,16 @@ const (
 	AzureProvider = "azure"
 )
 
+// scan actions
+const (
+	Read  = "r"
+	Write = "w"
+)
+
 // Config is struct representing the Commandline argument settings
 type Config struct {
 	BucketNames   *string
+	Action        *string
 	Download      *bool
 	Output        *string
 	Verbose       *bool
@@ -76,6 +83,7 @@ func main() {
 
 	configPtr.BucketNames = app.Arg("bucket-name", "Bucket(s) name(s) to scan. Does support comma separated for multiple buckets.").Required().String()
 	configPtr.CloudProvider = app.Flag("cloud", "Cloud provider to scan: aws, gcp, azure. Defaults to all.").Required().String()
+	configPtr.Action = app.Flag("action", "Scan action to invoke against bucket: (r)ead, (w)rite, all. Defaults to all.").Required().String()
 	configPtr.ThrottleMs = app.Flag("throttle", "Time in milliseconds to throttle subsequent requests sent to a given provider.").Int()
 	configPtr.Download = app.Flag("download", "Download bucket content(s).").Bool()
 	configPtr.Output = app.Flag("output", "Download bucket content(s) destination directory. Defaults to current user's directory if none passed.").String()
@@ -89,9 +97,14 @@ func main() {
 		*configPtr.CloudProvider = All
 	}
 
+	if strings.Trim(*configPtr.Action, " ") == "" {
+		*configPtr.Action = All
+	}
+
 	// output settings
 	configPtr.v(fmt.Sprintf("Cloud: %s", *configPtr.CloudProvider))
 	configPtr.v(fmt.Sprintf("Buckets: % s", *configPtr.BucketNames))
+	configPtr.v(fmt.Sprintf("Action: % s", *configPtr.Action))
 	configPtr.v(fmt.Sprintf("ThrottleMS: %d", *configPtr.ThrottleMs))
 	configPtr.v(fmt.Sprintf("Download: %t", *configPtr.Download))
 	configPtr.v(fmt.Sprintf("Output: %t", *configPtr.Output))
@@ -128,6 +141,7 @@ func main() {
 
 				configPtr.v(fmt.Sprintf("Getting from %s bucket: %s", scanner.GetProviderName(), bucketName))
 
+				// TODO account for read, write or both - configPtr.Action
 				bucket, err := scanner.Read(bucketName)
 
 				if err != nil {
