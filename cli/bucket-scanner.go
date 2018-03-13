@@ -135,6 +135,22 @@ func main() {
 					buckets = append(buckets, bucket)
 					mutex.Unlock()
 				}
+
+				if *configPtr.Download {
+					dst, err := os.Getwd()
+					if err != nil {
+						configPtr.v(fmt.Sprintf("Unable to get working directory due to error: %s", err.Error()))
+						//configPtr.v(fmt.Fprintln(os.Stderr, "Unable to get workind directory due to error: %s", err.Error()))
+					}
+
+					configPtr.v(fmt.Sprintf("Download bucket contents from %s to dir: %s", bucketName, dst))
+
+					_, err = bucket.Download(dst)
+					if err != nil {
+						configPtr.v(fmt.Sprintf("Unable to download bucket due to error: %s", err.Error()))
+						//configPtr.v(fmt.Fprintln(os.Stderr, "Unable to download bucket due to error: %s", err.Error()))
+					}
+				}
 			}
 		}(scanner)
 	}
