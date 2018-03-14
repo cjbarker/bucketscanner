@@ -103,11 +103,11 @@ func main() {
 
 	// output settings
 	configPtr.v(fmt.Sprintf("Cloud: %s", *configPtr.CloudProvider))
-	configPtr.v(fmt.Sprintf("Buckets: % s", *configPtr.BucketNames))
-	configPtr.v(fmt.Sprintf("Action: % s", *configPtr.Action))
+	configPtr.v(fmt.Sprintf("Buckets: %s", *configPtr.BucketNames))
+	configPtr.v(fmt.Sprintf("Action: %s", *configPtr.Action))
 	configPtr.v(fmt.Sprintf("ThrottleMS: %d", *configPtr.ThrottleMs))
 	configPtr.v(fmt.Sprintf("Download: %t", *configPtr.Download))
-	configPtr.v(fmt.Sprintf("Output: %t", *configPtr.Output))
+	configPtr.v(fmt.Sprintf("Output: %s", *configPtr.Output))
 	configPtr.v(fmt.Sprintf("JSON: %t", *configPtr.JSON))
 	configPtr.v(fmt.Sprintf("Verbose: %t", *configPtr.Verbose))
 
