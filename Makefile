@@ -63,7 +63,7 @@ build: glide format vet
 	go build -o ${BIN_DIR}/${LIB} ${LDFLAGS} ${PKG}
 	go build -o ${BIN_DIR}/${BINARY} ${LDFLAGS} ${PKG}/cli
 
-build_all: get format vet
+build_all: glide format vet
 	$(foreach GOOS, $(PLATFORMS),\
 	$(foreach GOARCH, $(ARCHITECTURES), $(shell export GOOS=$(GOOS); export GOARCH=$(GOARCH); go build -v -o $(BIN_DIR)/$(BINARY)-$(GOOS)-$(GOARCH) $(LDFLAGS) $(PKG)/cli; go build -v -o $(BIN_DIR)/$(LIB)-$(GOOS)-$(GOARCH) $(LDFLAGS) $(PKG))))
 
