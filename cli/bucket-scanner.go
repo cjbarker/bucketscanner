@@ -87,7 +87,7 @@ func main() {
 	configPtr.ThrottleMs = app.Flag("throttle", "Time in milliseconds to throttle subsequent requests sent to a given provider.").Int()
 	configPtr.Download = app.Flag("download", "Download bucket content(s).").Bool()
 	configPtr.Output = app.Flag("output", "Download bucket content(s) destination directory. Defaults to current user's directory if none passed.").String()
-	configPtr.JSON = app.Flag("JSON", "Output results in JSON.").Bool()
+	configPtr.JSON = app.Flag("json", "Output results in JSON.").Bool()
 	configPtr.Verbose = app.Flag("verbose", "Verbose output messages. Defaults to quiet.").Bool()
 
 	kingpin.MustParse(app.Parse(os.Args[1:]))

@@ -25,7 +25,7 @@ Flags:
   --download           Download bucket content(s).
   --output=OUTPUT      Download bucket content(s) destination directory. Defaults to current user's directory if
                        none passed.
-  --JSON               Output results in JSON.
+  --json               Output results in JSON.
   --verbose            Verbose output messages. Defaults to quiet.
 
 Args:
@@ -35,7 +35,7 @@ Args:
 Example searching one bucket on AWS for read-access:
 
 ```bash
-./bucketscanner --cloud=aws --action=read --JSON listing-test
+./bucketscanner --cloud=aws --action=read --json listing-test
 {
     "files": [
         {
