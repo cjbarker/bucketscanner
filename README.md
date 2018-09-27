@@ -1,7 +1,7 @@
 # Bucket Scanner
 
 [![pipeline status](https://gitlab.com/cjbarker/bucketscanner/badges/master/pipeline.svg)](https://gitlab.com/cjbarker/bucketscanner/commits/master) 
-[![coverage report](https://gitlab.com/cjbarker/bucketscanner/badges/master/coverage.svg)] (https://cjbarker.gitlab.io/bucketscanner/test-coverage.html)
+[![coverage report](https://gitlab.com/cjbarker/bucketscanner/badges/master/coverage.svg)](https://cjbarker.gitlab.io/bucketscanner/test-coverage.html)
 [![Go Report Card](https://goreportcard.com/badge/gitlab.com/cjbarker/bucketscanner)](https://goreportcard.com/report/gitlab.com/cjbarker/bucketscanner)
 [![GitLab license](https://img.shields.io/badge/license-Apache2.0-brightgreen.svg)](https://gitlab.com/cjbarker/bucketscanner/blob/master/LICENSE)
 
